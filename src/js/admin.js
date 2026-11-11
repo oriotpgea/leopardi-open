@@ -1,12 +1,15 @@
 // Azioni dello staff: login, giocatori, edizioni, team, partite e punti.
 import {
     db, auth, collection, addDoc, doc, updateDoc, deleteDoc, query, where, getDocs,
-    runTransaction, writeBatch, signInWithEmailAndPassword, signOut
+    runTransaction, writeBatch, deleteObject, signInWithEmailAndPassword, signOut
 } from './firebase.js';
 import { state, playerById, teamById, cupsOf } from './state.js';
 import { $, toast, confirmDialog, avatar, esc } from './ui.js';
 import { computeEditionStats } from './stats.js';
-import { uploadPlayerPhoto, uploadPhotoBlob, uploadCelebrationVideo, uploadCelebrationAudio } from './media.js';
+import {
+    uploadPlayerPhoto, uploadPhotoBlob, uploadCelebrationVideo, uploadCelebrationAudio,
+    deleteStoredFiles, storagePathOf, listPlayerFiles, getMetadata
+} from './media.js';
 import { enterAdmin } from './data.js';
 
 const fail = (e, fallback = 'Qualcosa è andato storto. Riprova.') => {
@@ -86,19 +89,29 @@ export async function savePlayer() {
         }
 
         // I file già presenti restano se non ne viene scelto uno nuovo
+        const previous = isEdit ? { ...playerById(playerId) } : {};
         const media = {};
-        if (photoFile) {
-            btn.innerText = 'Caricamento foto...';
-            media.photoUrl = await uploadPlayerPhoto(photoFile, playerId);
+        try {
+            if (photoFile) {
+                btn.innerText = 'Caricamento foto...';
+                media.photoUrl = await uploadPlayerPhoto(photoFile, playerId);
+            }
+            if (videoFile) {
+                media.celebrationVideoUrl = await uploadCelebrationVideo(videoFile, playerId, (step) => { btn.innerText = step; });
+            }
+            if (audioFile) {
+                btn.innerText = 'Caricamento audio...';
+                media.celebrationAudioUrl = await uploadCelebrationAudio(audioFile, playerId);
+            }
+            if (Object.keys(media).length) await updateDoc(doc(db, 'players', playerId), media);
+        } catch (e) {
+            // Caricamento a metà: i file nuovi già caricati non servono più
+            await deleteStoredFiles(Object.values(media));
+            throw e;
         }
-        if (videoFile) {
-            media.celebrationVideoUrl = await uploadCelebrationVideo(videoFile, playerId, (step) => { btn.innerText = step; });
-        }
-        if (audioFile) {
-            btn.innerText = 'Caricamento audio...';
-            media.celebrationAudioUrl = await uploadCelebrationAudio(audioFile, playerId);
-        }
-        if (Object.keys(media).length) await updateDoc(doc(db, 'players', playerId), media);
+
+        // I file sostituiti non servono più: si cancellano solo dopo che la scheda punta ai nuovi
+        await deleteStoredFiles(Object.keys(media).map(field => previous[field]));
 
         toast(isEdit ? 'Giocatore aggiornato!' : 'Giocatore creato!');
         cancelEdit();
@@ -233,12 +246,9 @@ export async function deleteCurrentEdition() {
         const refs = [...matchesSnap.docs, ...teamsSnap.docs].map(d => d.ref);
         refs.push(doc(db, 'editions', id));
 
-        // Scritture a blocchi: o vanno a buon fine tutte quelle del blocco, o nessuna
-        for (let i = 0; i < refs.length; i += 400) {
-            const batch = writeBatch(db);
-            refs.slice(i, i + 400).forEach(r => batch.delete(r));
-            await batch.commit();
-        }
+        // Prima team e partite, l'edizione per ultima: se qualcosa va storto a metà,
+        // l'edizione resta visibile e si può riprovare
+        await deleteInBatches(refs);
         state.adminEditionId = null;
         enterAdmin();
         toast('Evento eliminato.');
@@ -317,20 +327,113 @@ export async function createMatch() {
     } catch (e) { fail(e); }
 }
 
-const DELETE_MESSAGES = {
-    players: 'Eliminare questo giocatore dal roster? I punti che ha segnato restano nelle classifiche.',
-    teams: 'Eliminare questo team?',
-    matches: 'Eliminare questa partita con tutti i suoi punti?',
-};
-
 export async function deleteItem({ col, id }) {
-    if (!DELETE_MESSAGES[col]) return;
-    const ok = await confirmDialog(DELETE_MESSAGES[col], { okLabel: 'Elimina', danger: true });
+    if (col === 'players') return deletePlayer(id);
+    if (col === 'teams') return deleteTeam(id);
+    if (col !== 'matches') return;
+    const ok = await confirmDialog('Eliminare questa partita con tutti i suoi punti?', { okLabel: 'Elimina', danger: true });
+    if (!ok) return;
+    try { await deleteDoc(doc(db, 'matches', id)); } catch (e) { fail(e); }
+}
+
+// Il giocatore sparisce dal roster insieme a foto, video e audio.
+// I team in cui ha giocato restano, così i suoi punti restano nelle classifiche delle edizioni.
+async function deletePlayer(id) {
+    const player = playerById(id);
+    if (!player) return;
+    const ok = await confirmDialog(
+        `Eliminare ${player.name} dal roster, con foto, video ed esultanza? I punti che ha segnato restano nelle classifiche.`,
+        { okLabel: 'Elimina', danger: true });
     if (!ok) return;
     try {
-        await deleteDoc(doc(db, col, id));
-        if (col === 'players' && state.editingPlayerId === id) cancelEdit();
+        await deleteDoc(doc(db, 'players', id));
+        if (state.editingPlayerId === id) cancelEdit();
+        await deleteStoredFiles([player.photoUrl, player.celebrationVideoUrl, player.celebrationAudioUrl]);
+        toast(`${player.name} eliminato`);
     } catch (e) { fail(e); }
+}
+
+// Un team si porta via anche le sue partite, che altrimenti resterebbero senza squadra
+async function deleteTeam(id) {
+    try {
+        const [asA, asB] = await Promise.all([
+            getDocs(query(collection(db, 'matches'), where('teamA', '==', id))),
+            getDocs(query(collection(db, 'matches'), where('teamB', '==', id))),
+        ]);
+        const matchRefs = [...asA.docs, ...asB.docs].map(d => d.ref);
+        const n = matchRefs.length;
+        const message = n === 0 ? 'Eliminare questo team?'
+            : n === 1 ? 'Eliminare questo team e la sua partita, con tutti i punti?'
+            : `Eliminare questo team e le sue ${n} partite, con tutti i punti?`;
+        const ok = await confirmDialog(message, { okLabel: 'Elimina', danger: true });
+        if (!ok) return;
+        await deleteInBatches([...matchRefs, doc(db, 'teams', id)]);
+    } catch (e) { fail(e); }
+}
+
+// Cancella molti documenti a blocchi da 400 (il limite di Firestore è 500 per blocco)
+async function deleteInBatches(refs) {
+    for (let i = 0; i < refs.length; i += 400) {
+        const batch = writeBatch(db);
+        refs.slice(i, i + 400).forEach(r => batch.delete(r));
+        await batch.commit();
+    }
+}
+
+// --- PULIZIA ---
+// Cerca i dati che non appartengono più a niente e, dopo conferma, li cancella:
+// file nell'archivio che nessun giocatore usa, team e partite di edizioni eliminate.
+export async function cleanupOrphans() {
+    const btn = $('btn-cleanup');
+    btn.disabled = true;
+    btn.textContent = '🧹 Analisi in corso...';
+    try {
+        const used = new Set(state.players.flatMap(p =>
+            [p.photoUrl, p.celebrationVideoUrl, p.celebrationAudioUrl].map(storagePathOf).filter(Boolean)));
+
+        // File non usati. I video "raw" recenti potrebbero essere in compressione proprio ora: si lasciano.
+        const oneHourAgo = Date.now() - 60 * 60 * 1000;
+        const orphanFiles = [];
+        for (const file of await listPlayerFiles()) {
+            if (used.has(file.fullPath)) continue;
+            if (file.fullPath.startsWith('celebrations/raw/')) {
+                const meta = await getMetadata(file).catch(() => null);
+                if (!meta || new Date(meta.timeCreated).getTime() > oneHourAgo) continue;
+            }
+            orphanFiles.push(file);
+        }
+
+        // Team e partite di edizioni che non esistono più
+        const editionIds = new Set(state.editions.map(e => e.id));
+        const [teamsSnap, matchesSnap] = await Promise.all([
+            getDocs(collection(db, 'teams')),
+            getDocs(collection(db, 'matches')),
+        ]);
+        const orphanDocs = [...teamsSnap.docs, ...matchesSnap.docs]
+            .filter(d => !editionIds.has(d.data().editionId))
+            .map(d => d.ref);
+
+        if (!orphanFiles.length && !orphanDocs.length) {
+            toast('Tutto pulito: nessun dato orfano.');
+            return;
+        }
+
+        const parts = [];
+        if (orphanFiles.length) parts.push(`${orphanFiles.length} file non usati da nessun giocatore`);
+        if (orphanDocs.length) parts.push(`${orphanDocs.length} team/partite di edizioni eliminate`);
+        const ok = await confirmDialog(`Trovati ${parts.join(' e ')}. Cancellarli?`, { okLabel: 'Cancella', danger: true });
+        if (!ok) return;
+
+        btn.textContent = '🧹 Pulizia in corso...';
+        await deleteInBatches(orphanDocs);
+        await Promise.all(orphanFiles.map(f => deleteObject(f).catch(e => console.warn('File non cancellato:', f.fullPath, e))));
+        toast('Pulizia completata!');
+    } catch (e) {
+        fail(e);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🧹 Pulizia dati orfani';
+    }
 }
 
 // --- PUNTI ---

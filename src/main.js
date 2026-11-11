@@ -46,6 +46,7 @@ const actions = {
     'cancel-edit': admin.cancelEdit,
     'edit-player': admin.loadPlayerForEdit,
     'migrate-photos': admin.migratePhotos,
+    'cleanup': admin.cleanupOrphans,
     'create-edition': admin.createEdition,
     'delete-edition': admin.deleteCurrentEdition,
     'close-edition': admin.closeEdition,

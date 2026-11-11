@@ -208,7 +208,7 @@ export function renderTicker() {
 
     if (stats.length === 0) {
         ticker.innerHTML = '<span class="ticker-item">Nessun punto segnato...</span>';
-        ticker.style.animationDuration = '20s';
+        setTickerSpeed(ticker);
         return;
     }
 
@@ -222,7 +222,19 @@ export function renderTicker() {
     const separator = label('LEOPARDI OPEN', true);
 
     ticker.innerHTML = block + separator + block + separator + block;
-    ticker.style.animationDuration = `${Math.max(25, (stats.length + avgStats.length) * 6)}s`;
+    setTickerSpeed(ticker);
+}
+
+// Velocità di scorrimento del ticker, in pixel al secondo (più basso = più lento)
+const TICKER_SPEED = 45;
+
+// La durata dipende dalla lunghezza del testo, così la velocità è la stessa
+// su ogni schermo e con qualunque numero di giocatori in classifica
+function setTickerSpeed(ticker) {
+    requestAnimationFrame(() => {
+        const distance = ticker.scrollWidth || ticker.offsetWidth;
+        if (distance > 0) ticker.style.animationDuration = `${Math.round(distance / TICKER_SPEED)}s`;
+    });
 }
 
 // --- ALBO D'ORO ---

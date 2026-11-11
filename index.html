@@ -15,12 +15,12 @@
 </head>
 <body class="bg-dark text-white font-sans overflow-x-hidden pb-20">
 
-    <nav class="sticky top-0 w-full bg-darksec/95 backdrop-blur border-b border-gray-700 z-50 px-4 py-3 shadow-md">
-        <div class="flex justify-between items-center max-w-6xl mx-auto">
-            <a href="#" class="shrink-0 pr-4 hover:opacity-90 transition">
-                <img src="/img/logo.png" alt="Leopardi Open" class="h-10 md:h-16 w-auto object-contain">
+    <nav class="sticky top-0 w-full bg-darksec/95 backdrop-blur border-b border-gray-700 z-50 px-3 sm:px-4 py-3 shadow-md">
+        <div class="flex justify-between items-center gap-2 max-w-6xl mx-auto">
+            <a href="#" class="min-w-0 shrink hover:opacity-90 transition">
+                <img src="/img/logo.png" alt="Leopardi Open" class="h-8 sm:h-10 md:h-16 w-auto max-w-full object-contain">
             </a>
-            <div class="flex gap-1 sm:gap-2 text-xs font-bold uppercase tracking-wide">
+            <div class="flex shrink-0 sm:gap-2 text-[11px] sm:text-xs font-bold uppercase sm:tracking-wide">
                 <a href="#live" class="nav-btn hover:text-bp transition">Live</a>
                 <a href="#roster" class="nav-btn hover:text-bp transition">Roster</a>
                 <a href="#albo" class="nav-btn hover:text-bp transition">Albo</a>
@@ -145,6 +145,7 @@
                         <div class="text-[10px] uppercase text-gray-500 font-bold mb-2">Database</div>
                         <div id="players-list-tiny" class="h-32 overflow-y-auto text-xs text-gray-400 space-y-1 pr-1"></div>
                         <button data-action="migrate-photos" id="btn-migrate-photos" class="hide mt-3 text-[10px] text-gray-500 hover:text-bp underline"></button>
+                        <button data-action="cleanup" id="btn-cleanup" class="block mt-2 text-[10px] text-gray-500 hover:text-bp underline">🧹 Pulizia dati orfani</button>
                     </div>
                 </div>
             </div>
@@ -277,7 +278,7 @@
     <div id="toast-container" aria-live="polite"></div>
 
     <div class="fixed bottom-5 right-5 z-40 cursor-default select-none">
-        <img src="/img/rf.png" alt="Designed by Riccardo Fava" class="h-8 w-auto drop-shadow-lg">
+        <img src="/img/rf.svg" alt="Designed by Riccardo Fava" title="Designed by Riccardo Fava" class="h-8 w-8 opacity-80 drop-shadow-lg">
     </div>
     <script type="module" src="/src/main.js"></script>
 </body>

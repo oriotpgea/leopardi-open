@@ -60,4 +60,8 @@ Poi, da terminale: `npm run deploy:rules` e `npm run deploy:functions`.
 - Le partite senza campo `cups` valgono 6 bicchieri.
 - Le edizioni archiviate conservano le classifiche salvate alla chiusura.
 - Il campo `tol` dei giocatori è la statistica mostrata come "Res".
-- La regione della Cloud Function (`europe-west1`) è scritta in `functions/index.js` e in `src/js/firebase.js`: devono coincidere.
+- Eliminando un giocatore si cancellano anche foto, video e audio; i team in cui ha giocato restano, così i suoi punti restano nelle classifiche.
+- Sostituendo foto, video o audio, il file vecchio viene cancellato.
+- Eliminando un team si cancellano anche le sue partite; eliminando un'edizione, tutti i suoi team e partite.
+- Il pulsante **🧹 Pulizia dati orfani** (Admin → Database) trova e cancella, dopo conferma, file che nessun giocatore usa e team/partite di edizioni eliminate.
+- La regione della Cloud Function (`us-west1`, la stessa dello Storage) è scritta in `functions/index.js` e in `src/js/firebase.js`: devono coincidere.

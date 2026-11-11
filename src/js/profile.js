@@ -55,7 +55,14 @@ function computeCareer(playerId, matches, teams) {
         const podium = edition.podium || {};
         const medal = names.has(podium.first) ? '🥇' : names.has(podium.second) ? '🥈' : names.has(podium.third) ? '🥉' : '';
 
-        rows.push({ name: edition.name, open: edition.status !== 'closed', played, wins, goals, medal });
+        // Compagno (o compagni, se in quell'edizione ha giocato in più coppie)
+        const partners = [...new Set(myTeams.map(t => {
+            const partnerId = t.p1Id === playerId ? t.p2Id : t.p1Id;
+            const partnerStoredName = t.p1Id === playerId ? t.p2Name : t.p1Name;
+            return playerById(partnerId)?.name || partnerStoredName || '?';
+        }))];
+
+        rows.push({ name: edition.name, open: edition.status !== 'closed', played, wins, goals, medal, partners });
     });
 
     const total = rows.reduce((acc, r) => ({
@@ -93,7 +100,10 @@ function renderCareer({ rows, total }) {
                 <span class="text-gray-500 font-bold uppercase text-[9px] text-right">Vinte</span>
                 <span class="text-gray-500 font-bold uppercase text-[9px] text-right">Centri</span>
                 ${rows.map(r => `
-                    <span class="text-gray-200 font-bold truncate border-t border-gray-800 pt-1">${r.medal} ${esc(r.name)}${r.open ? ' <span class="text-green-400 font-normal">· in corso</span>' : ''}</span>
+                    <span class="min-w-0 border-t border-gray-800 pt-1">
+                        <span class="block text-gray-200 font-bold truncate">${r.medal} ${esc(r.name)}${r.open ? ' <span class="text-green-400 font-normal">· in corso</span>' : ''}</span>
+                        <span class="block text-[10px] text-gray-400 truncate">con ${r.partners.map(esc).join(', ')}</span>
+                    </span>
                     <span class="text-right border-t border-gray-800 pt-1">${r.played}</span>
                     <span class="text-right border-t border-gray-800 pt-1">${r.wins}</span>
                     <span class="text-right font-bold text-bp border-t border-gray-800 pt-1">${r.goals}</span>`).join('')}

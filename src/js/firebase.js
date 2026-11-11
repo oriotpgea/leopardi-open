@@ -9,7 +9,7 @@ export {
     collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where,
     orderBy, getDocs, runTransaction, writeBatch
 } from 'firebase/firestore';
-export { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+export { ref, uploadBytes, getDownloadURL, deleteObject, listAll, getMetadata } from 'firebase/storage';
 export { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 export { httpsCallable } from 'firebase/functions';
 
@@ -25,7 +25,7 @@ const firebaseConfig = {
 };
 
 // Deve coincidere con REGION in functions/index.js
-const FUNCTIONS_REGION = 'europe-west1';
+const FUNCTIONS_REGION = 'us-west1';
 
 const appInstance = initializeApp(firebaseConfig);
 export const db = getFirestore(appInstance);

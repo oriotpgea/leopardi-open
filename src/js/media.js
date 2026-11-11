@@ -1,5 +1,5 @@
 // Caricamento di foto, video e audio su Firebase Storage.
-import { storage, functions, ref, uploadBytes, getDownloadURL, deleteObject, httpsCallable } from './firebase.js';
+import { storage, functions, ref, uploadBytes, getDownloadURL, deleteObject, listAll, getMetadata, httpsCallable } from './firebase.js';
 
 const extensionOf = (file, fallback) => {
     const m = /\.([a-z0-9]{1,5})$/i.exec(file?.name || '');
@@ -68,3 +68,32 @@ export async function uploadCelebrationAudio(file, playerId) {
     await uploadBytes(fileRef, file, file.type ? { contentType: file.type } : undefined);
     return getDownloadURL(fileRef);
 }
+
+// --- CANCELLAZIONE ---
+// Restituisce il percorso nell'archivio di un file di questo progetto, oppure null
+// (foto vecchie salvate nel database, link esterni, file di altri progetti).
+export function storagePathOf(url) {
+    if (typeof url !== 'string' || !url.startsWith('https://')) return null;
+    if (!url.includes(`/b/${storage.app.options.storageBucket}/o/`)) return null;
+    try { return ref(storage, url).fullPath; } catch { return null; }
+}
+
+// Cancella dall'archivio i file indicati. Non blocca mai: se un file non c'è già più, va bene così.
+export async function deleteStoredFiles(urls) {
+    const paths = urls.map(storagePathOf).filter(Boolean);
+    await Promise.all(paths.map(path => deleteObject(ref(storage, path)).catch(e => {
+        if (e?.code !== 'storage/object-not-found') console.warn('File non cancellato:', path, e);
+    })));
+}
+
+// Elenca tutti i file delle cartelle dei giocatori, con i "raw" (video in attesa di compressione)
+export async function listPlayerFiles() {
+    const files = [];
+    for (const folder of ['photos', 'celebrations', 'celebrations/raw', 'audio']) {
+        const res = await listAll(ref(storage, folder));
+        files.push(...res.items);
+    }
+    return files;
+}
+
+export { getMetadata };

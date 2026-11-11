@@ -12,7 +12,7 @@ const { transcode } = require('./transcode');
 initializeApp();
 
 // Deve coincidere con FUNCTIONS_REGION in src/js/firebase.js
-const REGION = 'europe-west1';
+const REGION = 'us-west1';
 const RAW_PATH = /^celebrations\/raw\/([\w-]+)\.\w{1,5}$/;
 
 exports.optimizeVideo = onCall(
