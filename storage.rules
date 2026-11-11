@@ -1,0 +1,12 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      // Foto, video e audio sono visibili a tutti
+      allow read: if true;
+      // Solo lo staff (chi ha fatto login) può caricare, con un tetto di 60MB per file
+      allow create, update: if request.auth != null && request.resource.size < 60 * 1024 * 1024;
+      allow delete: if request.auth != null;
+    }
+  }
+}

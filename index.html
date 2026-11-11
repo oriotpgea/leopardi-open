@@ -2,23 +2,14 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leopardi Open</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { 
-                extend: { 
-                    colors: { bp: '#ff6b00', dark: '#0f172a', darksec: '#1e293b' },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
-                } 
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="icon" type="image/png" href="favicon leopardi open@2x.png">
-    <link rel="apple-touch-icon" href="favicon leopardi open@2x.png">
+    <meta name="description" content="Diretta, roster e albo d'oro del Leopardi Open.">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
@@ -26,44 +17,38 @@
 
     <nav class="sticky top-0 w-full bg-darksec/95 backdrop-blur border-b border-gray-700 z-50 px-4 py-3 shadow-md">
         <div class="flex justify-between items-center max-w-6xl mx-auto">
-            <img src="Leopardi open H.png" 
-                alt="Leopardi Open" 
-                class="h-10 md:h-16 w-auto object-contain cursor-pointer hover:opacity-90 transition shrink-0 pr-4" 
-                onclick="app.router('landing')">
-            <div class="flex gap-2 text-xs font-bold uppercase tracking-wide">
-                <button onclick="app.router('live')" class="nav-btn hover:text-bp transition">Live</button>
-                <button onclick="app.router('players')" class="nav-btn hover:text-bp transition">Roster</button>
-                <button onclick="app.router('archive')" class="nav-btn hover:text-bp transition">Albo</button>
-                <button onclick="app.router('admin')" class="nav-btn hover:text-bp transition">Admin</button>
+            <a href="#" class="shrink-0 pr-4 hover:opacity-90 transition">
+                <img src="/img/logo.png" alt="Leopardi Open" class="h-10 md:h-16 w-auto object-contain">
+            </a>
+            <div class="flex gap-1 sm:gap-2 text-xs font-bold uppercase tracking-wide">
+                <a href="#live" class="nav-btn hover:text-bp transition">Live</a>
+                <a href="#roster" class="nav-btn hover:text-bp transition">Roster</a>
+                <a href="#albo" class="nav-btn hover:text-bp transition">Albo</a>
+                <a href="#admin" class="nav-btn hover:text-bp transition">Admin</a>
             </div>
         </div>
     </nav>
 
     <div id="view-landing" class="px-4 py-8 text-center max-w-lg mx-auto">
-        <img src="Leopardi open H.png" 
-            alt="Leopardi Open" 
-            class="mx-auto w-full max-w-sm mb-8 drop-shadow-lg">
-        
-        <button onclick="app.router('live')" class="btn w-full text-xl py-5 shadow-lg shadow-orange-900/20 mb-8 animate__animated animate__pulse animate__infinite border border-orange-500/30">
+        <img src="/img/logo.png" alt="Leopardi Open" class="mx-auto w-full max-w-sm mb-8 drop-shadow-lg">
+
+        <a href="#live" class="btn block w-full text-xl py-5 shadow-lg shadow-orange-900/20 mb-8 animate__animated animate__pulse animate__infinite border border-orange-500/30">
             🔴 VAI ALLA DIRETTA
-        </button>
+        </a>
 
         <div class="grid gap-4 text-left md:grid-cols-2">
-            
-            <div onclick="app.router('players')" class="card p-5 cursor-pointer hover:border-blue-500 transition border-l-4 border-l-blue-500 hover:bg-gray-800 active:scale-95">
+            <a href="#roster" class="card block p-5 cursor-pointer hover:border-blue-500 transition border-l-4 border-l-blue-500 hover:bg-gray-800 active:scale-95">
                 <h3 class="font-bold text-white mb-1 text-lg">🧢 Roster</h3>
-                <p class="text-xs text-gray-400">Schede tecniche e stats dei giocatori.</p>
-            </div>
-
-            <div onclick="app.router('archive')" class="card p-5 cursor-pointer hover:border-yellow-500 transition border-l-4 border-l-yellow-500 hover:bg-gray-800 active:scale-95">
+                <p class="text-xs text-gray-400">Schede tecniche, stats e carriera dei giocatori.</p>
+            </a>
+            <a href="#albo" class="card block p-5 cursor-pointer hover:border-yellow-500 transition border-l-4 border-l-yellow-500 hover:bg-gray-800 active:scale-95">
                 <h3 class="font-bold text-white mb-1 text-lg">🏆 Albo d'Oro</h3>
                 <p class="text-xs text-gray-400">Storico vincitori e edizioni passate.</p>
-            </div>
-
+            </a>
         </div>
 
         <div class="mt-8">
-            <button onclick="app.router('admin')" class="text-xs text-gray-600 hover:text-gray-400 underline">Area Staff</button>
+            <a href="#admin" class="text-xs text-gray-600 hover:text-gray-400 underline">Area Staff</a>
         </div>
     </div>
 
@@ -93,71 +78,73 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div>
                 <h2 class="text-3xl font-black italic mb-1">ROSTER UFFICIALE</h2>
-                <p class="text-gray-400 text-sm">Le figurine dei campioni.</p>
+                <p class="text-gray-400 text-sm">Le figurine dei campioni. Tocca una carta per la carriera.</p>
             </div>
-            <input type="text" id="search-roster" onkeyup="app.filterRoster()" placeholder="🔍 Cerca giocatore..." class="bg-darksec border border-gray-600 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-bp w-full md:w-64 transition">
+            <input type="search" id="search-roster" placeholder="🔍 Cerca giocatore..." class="bg-darksec border border-gray-600 rounded-full px-4 py-2 text-base md:text-sm text-white focus:outline-none focus:border-bp w-full md:w-64 transition">
         </div>
-        
+
         <div id="public-players-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         <div id="no-players-found" class="hide text-center text-gray-500 italic py-10 w-full col-span-full">Nessun giocatore trovato.</div>
     </div>
 
     <div id="view-login" class="hide px-4 mt-10">
-        <div class="card max-w-sm mx-auto p-6">
+        <form id="login-form" class="card max-w-sm mx-auto p-6">
             <h2 class="text-xl font-bold mb-4 text-center">Staff Only</h2>
-            <input type="password" id="admin-pass" class="input" placeholder="Password">
-            <button onclick="app.login()" class="btn w-full">Entra</button>
-        </div>
+            <input type="email" id="admin-email" class="input" placeholder="Email" autocomplete="username" required>
+            <input type="password" id="admin-pass" class="input" placeholder="Password" autocomplete="current-password" required>
+            <button type="submit" id="btn-login" class="btn w-full">Entra</button>
+        </form>
     </div>
 
     <div id="view-dashboard" class="hide px-4 pt-12 max-w-7xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-bp">Console</h2>
-            <button onclick="app.logout()" class="text-xs border border-gray-600 px-3 py-1 rounded">Esci</button>
+            <button data-action="logout" class="text-xs border border-gray-600 px-3 py-1 rounded">Esci</button>
         </div>
 
         <div class="grid lg:grid-cols-3 gap-8">
             <div class="lg:col-span-1 space-y-6">
                 <div class="card p-5 border-l-4 border-l-blue-500 relative" id="card-player-form">
                     <h3 class="font-bold mb-4 text-blue-400 uppercase tracking-widest text-xs" id="form-title">1. Nuova Carta Giocatore</h3>
-                    
-                    <button onclick="app.cancelEdit()" id="btn-cancel-edit" class="hide absolute top-4 right-4 text-xs text-red-400 underline">Annulla</button>
+
+                    <button data-action="cancel-edit" id="btn-cancel-edit" class="hide absolute top-4 right-4 text-xs text-red-400 underline">Annulla</button>
 
                     <div class="mb-4 text-center">
-                        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold">Foto Profilo</label>
+                        <label for="player-photo" class="block text-xs text-gray-400 mb-2 uppercase font-bold">Foto Profilo</label>
                         <input type="file" id="player-photo" accept="image/*" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 mb-2 w-full">
-                        <p class="text-[10px] text-gray-500 italic" id="photo-hint">Carica foto per sostituire l'attuale</p>
+                        <p class="text-[10px] text-gray-500 italic" id="photo-hint">Foto del giocatore (opzionale)</p>
                     </div>
                     <div class="mb-4 text-center border-t border-gray-700 pt-4">
-                        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold">🎥 Video Esultanza (opzionale)</label>
+                        <label for="player-video" class="block text-xs text-gray-400 mb-2 uppercase font-bold">🎥 Video Esultanza (opzionale)</label>
                         <input type="file" id="player-video" accept="video/*" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-orange-600 file:text-white hover:file:bg-orange-500 mb-2 w-full">
-                        <p class="text-[10px] text-gray-500 italic" id="video-hint">Clip breve (3-5s). Verrà compressa automaticamente.</p>
+                        <p class="text-[10px] text-gray-500 italic" id="video-hint">Viene tagliato a 6 secondi e compresso automaticamente.</p>
                     </div>
                     <div class="mb-4 text-center border-t border-gray-700 pt-4">
-                        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold">🔊 Motto Audio (opzionale)</label>
+                        <label for="player-audio" class="block text-xs text-gray-400 mb-2 uppercase font-bold">🔊 Motto Audio (opzionale)</label>
                         <input type="file" id="player-audio" accept="audio/*" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 mb-2 w-full">
                         <p class="text-[10px] text-gray-500 italic" id="audio-hint">Frase o urlo breve (2-3s), max 5MB.</p>
                     </div>
                     <div class="space-y-2 mb-4">
-                        <input type="text" id="player-name" class="input font-bold mb-0" placeholder="Nome Atleta">
-                        <input type="text" id="player-nick" class="input text-sm text-yellow-500 italic mb-0" placeholder='"Soprannome"'>
-                        <textarea id="player-desc" class="input text-xs text-gray-300 italic mb-0 h-16 resize-none" placeholder="Motto..."></textarea>
+                        <input type="text" id="player-name" class="input font-bold mb-0" placeholder="Nome Atleta" maxlength="40">
+                        <input type="text" id="player-nick" class="input text-sm text-yellow-500 italic mb-0" placeholder='"Soprannome"' maxlength="40">
+                        <textarea id="player-desc" class="input text-xs text-gray-300 italic mb-0 h-16 resize-none" placeholder="Motto..." maxlength="200"></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mb-4">
-                        <select id="player-hand" class="input text-sm mb-0"><option value="Destra">🖐️ Destra</option><option value="Sinistra">🖐️ Sinistra</option></select>
-                        <select id="player-style" class="input text-sm mb-0"><option value="Misto">☄️ Misto</option><option value="Diretto">🚀 Diretto</option><option value="Rimbalzo">🦘 Rimbalzo</option></select>
+                        <select id="player-hand" class="input text-sm mb-0" aria-label="Mano"><option value="Destra">🖐️ Destra</option><option value="Sinistra">🖐️ Sinistra</option></select>
+                        <select id="player-style" class="input text-sm mb-0" aria-label="Stile"><option value="Misto">☄️ Misto</option><option value="Diretto">🚀 Diretto</option><option value="Rimbalzo">🦘 Rimbalzo</option></select>
                     </div>
                     <div class="grid grid-cols-3 gap-2 mb-4">
-                        <div class="text-center"><label class="text-[10px] uppercase font-bold text-gray-400 block">🎯 Prec</label><input type="number" id="stat-prec" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-green-500 border-green-900 focus:border-green-500 text-lg p-1"></div>
-                        <div class="text-center"><label class="text-[10px] uppercase font-bold text-gray-400 block">🔥 Pow</label><input type="number" id="stat-pow" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-red-500 border-red-900 focus:border-red-500 text-lg p-1"></div>
-                        <div class="text-center"><label class="text-[10px] uppercase font-bold text-gray-400 block">🍺 Res</label><input type="number" id="stat-tol" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-yellow-500 border-yellow-900 focus:border-yellow-500 text-lg p-1"></div>
+                        <div class="text-center"><label for="stat-prec" class="text-[10px] uppercase font-bold text-gray-400 block">🎯 Prec</label><input type="number" id="stat-prec" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-green-500 border-green-900 focus:border-green-500 text-lg p-1"></div>
+                        <div class="text-center"><label for="stat-pow" class="text-[10px] uppercase font-bold text-gray-400 block">🔥 Pow</label><input type="number" id="stat-pow" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-red-500 border-red-900 focus:border-red-500 text-lg p-1"></div>
+                        <div class="text-center"><label for="stat-tol" class="text-[10px] uppercase font-bold text-gray-400 block">🍺 Res</label><input type="number" id="stat-tol" min="0" max="100" value="70" class="input mb-0 text-center font-bold text-yellow-500 border-yellow-900 focus:border-yellow-500 text-lg p-1"></div>
                     </div>
-                    
-                    <button onclick="app.savePlayer()" class="btn w-full bg-blue-600 hover:bg-blue-500" id="btn-save-player">Salva e Carica</button>
-                    
+
+                    <button data-action="save-player" class="btn w-full bg-blue-600 hover:bg-blue-500" id="btn-save-player">Salva e Carica</button>
+
                     <div class="mt-4 pt-4 border-t border-gray-700">
                         <div class="text-[10px] uppercase text-gray-500 font-bold mb-2">Database</div>
                         <div id="players-list-tiny" class="h-32 overflow-y-auto text-xs text-gray-400 space-y-1 pr-1"></div>
+                        <button data-action="migrate-photos" id="btn-migrate-photos" class="hide mt-3 text-[10px] text-gray-500 hover:text-bp underline"></button>
                     </div>
                 </div>
             </div>
@@ -165,17 +152,17 @@
             <div class="lg:col-span-2 space-y-6">
                 <div class="card p-4 border-l-4 border-l-bp flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div class="w-full">
-                        <label class="text-xs text-gray-400 uppercase font-bold block mb-1">Edizione Attiva</label>
+                        <label for="admin-edition-select" class="text-xs text-gray-400 uppercase font-bold block mb-1">Edizione Attiva</label>
                         <div class="flex gap-2 items-center">
-                            <select id="admin-edition-select" onchange="app.adminChangeEdition(this.value)" class="input mb-0 font-bold flex-grow"><option value="">Caricamento...</option></select>
-                            <button onclick="app.deleteCurrentEdition()" class="bg-red-900/50 hover:bg-red-800 text-red-400 border border-red-800 p-2 rounded ml-2">🗑️</button>
+                            <select id="admin-edition-select" class="input mb-0 font-bold flex-grow"><option value="">Caricamento...</option></select>
+                            <button data-action="delete-edition" title="Elimina edizione" class="bg-red-900/50 hover:bg-red-800 text-red-400 border border-red-800 p-2 rounded ml-2">🗑️</button>
                         </div>
                     </div>
                     <div class="w-full md:w-auto border-t md:border-t-0 md:border-l border-gray-700 pt-4 md:pt-0 md:pl-4">
-                         <label class="text-xs text-gray-400 uppercase font-bold block mb-1">Nuova Edizione</label>
+                         <label for="new-edition-name" class="text-xs text-gray-400 uppercase font-bold block mb-1">Nuova Edizione</label>
                          <div class="flex gap-2">
-                            <input type="text" id="new-edition-name" class="input mb-0 w-32" placeholder="Es. Estate">
-                            <button onclick="app.createEdition()" class="btn whitespace-nowrap text-xs">Crea</button>
+                            <input type="text" id="new-edition-name" class="input mb-0 md:w-32" placeholder="Es. Estate" maxlength="40">
+                            <button data-action="create-edition" class="btn whitespace-nowrap text-xs">Crea</button>
                         </div>
                     </div>
                 </div>
@@ -183,9 +170,9 @@
                 <div id="admin-controls" class="opacity-50 pointer-events-none transition-opacity grid md:grid-cols-2 gap-6">
                     <div class="card p-4">
                         <h3 class="font-bold mb-3 text-sm text-gray-300 uppercase tracking-widest">2. Iscrivi Coppia</h3>
-                        <select id="sel-p1" class="input mb-2 text-sm"><option value="">Seleziona P1</option></select>
-                        <select id="sel-p2" class="input mb-2 text-sm"><option value="">Seleziona P2</option></select>
-                        <button onclick="app.createTeam()" class="btn w-full text-sm">Registra Team</button>
+                        <select id="sel-p1" class="input mb-2 text-sm" aria-label="Giocatore 1"><option value="">Seleziona P1</option></select>
+                        <select id="sel-p2" class="input mb-2 text-sm" aria-label="Giocatore 2"><option value="">Seleziona P2</option></select>
+                        <button data-action="create-team" class="btn w-full text-sm">Registra Team</button>
                         <div class="mt-4 pt-4 border-t border-gray-700">
                             <div class="text-[10px] uppercase text-gray-500 font-bold mb-2">Team Iscritti</div>
                             <div id="teams-list-admin" class="h-32 overflow-y-auto text-xs text-gray-400 space-y-1 pr-1"></div>
@@ -193,75 +180,105 @@
                     </div>
                     <div class="card p-4">
                         <h3 class="font-bold mb-3 text-sm text-gray-300 uppercase tracking-widest">3. Nuovo Match</h3>
-                        <input type="text" id="match-title" class="input mb-2 text-sm text-center" placeholder="Titolo (es. Finale)">
+                        <input type="text" id="match-title" class="input mb-2 text-sm text-center" placeholder="Titolo (es. Finale)" maxlength="40">
                         <div class="flex gap-2 mb-2">
-                            <select id="sel-team-a" class="input mb-0 text-sm"><option value="">Team A</option></select>
-                            <select id="sel-team-b" class="input mb-0 text-sm"><option value="">Team B</option></select>
+                            <select id="sel-team-a" class="input mb-0 text-sm" aria-label="Team A"><option value="">Team A</option></select>
+                            <select id="sel-team-b" class="input mb-0 text-sm" aria-label="Team B"><option value="">Team B</option></select>
                         </div>
-                        <button onclick="app.createMatch()" class="btn w-full text-sm">START</button>
+                        <select id="match-cups" class="input mb-2 text-sm" aria-label="Numero di bicchieri">
+                            <option value="6">🥤 6 bicchieri per squadra</option>
+                            <option value="10">🥤 10 bicchieri per squadra</option>
+                        </select>
+                        <button data-action="create-match" class="btn w-full text-sm">START</button>
                     </div>
                 </div>
 
                 <div id="admin-live-area" class="opacity-50 pointer-events-none transition-opacity">
-                    <h3 class="font-bold text-sm text-gray-400 uppercase tracking-widest mb-4">Gestione Live</h3>
+                    <h3 class="font-bold text-sm text-gray-400 uppercase tracking-widest mb-1">Gestione Live</h3>
+                    <p class="text-[11px] text-gray-500 mb-4">Tocca un bicchiere per assegnare il punto; tocca la foto sotto la piramide per annullarlo.</p>
                     <div id="admin-matches" class="space-y-6"></div>
                     <div class="mt-10 pt-10 border-t-4 border-red-900/30 bg-red-900/10 p-6 rounded-xl">
                         <h3 class="font-black text-red-500 mb-4 text-lg">🏁 ZONA CHIUSURA</h3>
                         <div class="grid gap-2 mb-4">
-                            <input type="text" id="rank-1" class="input border-yellow-600 text-yellow-500 font-bold" placeholder="🥇 1° Classificato">
-                            <input type="text" id="rank-2" class="input border-gray-500" placeholder="🥈 2° Classificato">
-                            <input type="text" id="rank-3" class="input border-orange-700" placeholder="🥉 3° Classificato">
+                            <select id="rank-1" class="input mb-0 border-yellow-600 text-yellow-500 font-bold" aria-label="Primo classificato"><option value="">🥇 1° Classificato</option></select>
+                            <select id="rank-2" class="input mb-0 border-gray-500" aria-label="Secondo classificato"><option value="">🥈 2° Classificato</option></select>
+                            <select id="rank-3" class="input mb-0 border-orange-700" aria-label="Terzo classificato"><option value="">🥉 3° Classificato</option></select>
                         </div>
-                        <button onclick="app.closeEdition()" class="btn w-full bg-red-600 hover:bg-red-500">Chiudi Evento</button>
+                        <button data-action="close-edition" class="btn btn-danger w-full">Chiudi Evento</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Chi ha segnato? -->
     <div id="scorer-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hide">
         <div class="bg-darksec p-6 rounded-xl border border-gray-600 max-w-md w-full mx-4 text-center">
             <h3 class="text-xl font-bold mb-6 text-white">Chi ha segnato?</h3>
             <div class="grid grid-cols-2 gap-6">
-                <button id="btn-scorer-p1" class="flex flex-col items-center gap-2 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 transition-all hover:scale-105"></button>
-                <button id="btn-scorer-p2" class="flex flex-col items-center gap-2 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 transition-all hover:scale-105"></button>
+                <button id="btn-scorer-p1" data-action="confirm-hit" class="flex flex-col items-center gap-2 p-4 min-w-0 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 transition-all hover:scale-105"></button>
+                <button id="btn-scorer-p2" data-action="confirm-hit" class="flex flex-col items-center gap-2 p-4 min-w-0 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 transition-all hover:scale-105"></button>
             </div>
-            <button onclick="document.getElementById('scorer-modal').classList.add('hide')" class="mt-6 text-sm text-gray-400 underline">Annulla</button>
+            <button data-action="close-modal" data-target="scorer-modal" class="mt-6 text-sm text-gray-400 underline">Annulla</button>
         </div>
     </div>
 
-    <div id="overlay-goal" class="fixed inset-0 z-[200] bg-black/90 flex flex-col items-center justify-center hide animate__animated animate__zoomIn">
-        <h1 class="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-600 mb-8 italic drop-shadow-[0_0_15px_rgba(255,165,0,0.8)] animate__animated animate__pulse animate__infinite">GOAL!</h1>
-        <div class="w-64 h-64 rounded-full border-8 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] bg-cover bg-center mb-6" id="overlay-goal-img"></div>
-        <video id="overlay-goal-video" class="hide w-64 h-64 md:w-80 md:h-80 rounded-2xl border-8 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] object-cover mb-6" playsinline muted loop></video>
-        <audio id="overlay-goal-audio"></audio>
-        <h2 id="overlay-goal-name" class="text-4xl font-black uppercase text-white tracking-widest drop-shadow-lg">NOME GIOCATORE</h2>
-        <div class="text-xl text-yellow-400 font-serif italic mt-2" id="overlay-goal-team">Team Name</div>
+    <!-- Carriera giocatore -->
+    <div id="profile-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hide">
+        <div class="bg-darksec p-5 rounded-xl border border-gray-600 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start gap-3 mb-5">
+                <div id="profile-header" class="flex items-center gap-4 min-w-0"></div>
+                <button data-action="close-modal" data-target="profile-modal" class="text-white/50 hover:text-white text-xs uppercase border border-white/20 px-3 py-1 rounded-full shrink-0">Chiudi</button>
+            </div>
+            <div id="profile-body"></div>
+        </div>
     </div>
 
+    <!-- GOAL -->
+    <div id="overlay-goal" class="fixed inset-0 z-[200] bg-black/90 flex flex-col items-center justify-center hide animate__animated animate__zoomIn">
+        <h1 class="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-600 mb-8 italic drop-shadow-[0_0_15px_rgba(255,165,0,0.8)] animate__animated animate__pulse animate__infinite">GOAL!</h1>
+        <img id="overlay-goal-img" alt="" class="hide w-64 h-64 rounded-full border-8 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] object-cover mb-6">
+        <video id="overlay-goal-video" class="hide w-64 h-64 md:w-80 md:h-80 rounded-2xl border-8 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] object-cover mb-6" playsinline muted loop></video>
+        <audio id="overlay-goal-audio"></audio>
+        <h2 id="overlay-goal-name" class="text-4xl font-black uppercase text-white tracking-widest drop-shadow-lg text-center px-4">NOME GIOCATORE</h2>
+        <div class="text-xl text-yellow-400 font-serif italic mt-2 text-center px-4" id="overlay-goal-team">Team Name</div>
+    </div>
+
+    <!-- Fine partita -->
     <div id="overlay-end" class="fixed inset-0 z-[200] bg-black flex flex-col hide animate__animated animate__fadeIn">
         <div class="h-1/2 bg-gradient-to-b from-yellow-900 to-black flex flex-col items-center justify-center border-b-4 border-yellow-500 relative overflow-hidden">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
-            <div class="z-10 text-center animate__animated animate__bounceInDown">
+            <div class="z-10 text-center px-4 animate__animated animate__bounceInDown">
                 <div class="text-yellow-400 text-sm font-bold uppercase tracking-[0.5em] mb-2">Vincitori</div>
                 <h2 id="overlay-end-winner" class="text-5xl md:text-7xl font-black text-white drop-shadow-[0_0_20px_rgba(255,215,0,0.8)]">TEAM WINNER</h2>
                 <div class="text-6xl mt-4">🏆</div>
             </div>
         </div>
         <div class="h-1/2 bg-gray-900 flex flex-col items-center justify-center relative grayscale">
-            <div class="z-10 text-center animate__animated animate__fadeInUp animate__delay-1s">
+            <div class="z-10 text-center px-4 animate__animated animate__fadeInUp animate__delay-1s">
                 <div class="text-gray-500 text-sm font-bold uppercase tracking-[0.5em] mb-2">Umiliazione</div>
                 <h2 id="overlay-end-loser" class="text-4xl md:text-5xl font-black text-gray-400 line-through decoration-red-600 decoration-4">TEAM LOSER</h2>
                 <div class="text-6xl mt-4">💀</div>
             </div>
         </div>
-        <button onclick="document.getElementById('overlay-end').classList.add('hide')" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 text-xs uppercase border border-white/20 px-3 py-1 rounded-full">Chiudi</button>
+        <button data-action="close-modal" data-target="overlay-end" class="absolute top-4 right-4 text-white/50 hover:text-white z-50 text-xs uppercase border border-white/20 px-3 py-1 rounded-full">Chiudi</button>
     </div>
 
-    <div class="fixed bottom-5 right-5 z-40 opacity-100 hover:opacity-100 transition-opacity duration-500 cursor-default select-none">
-        <img src="rf.png" alt="Designed by Riccardo Fava" class="h-8 w-auto drop-shadow-lg">
+    <!-- Conferma -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[300] hide">
+        <div class="bg-darksec p-6 rounded-xl border border-gray-600 max-w-sm w-full mx-4 text-center">
+            <p id="confirm-message" class="text-sm text-gray-200 mb-6 leading-relaxed"></p>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="confirm-cancel" class="border border-gray-600 rounded-lg py-2 text-sm text-gray-300 hover:bg-gray-700 transition">Annulla</button>
+                <button id="confirm-ok" class="btn text-sm">Conferma</button>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script type="module" src="script.js"></script>
+
+    <div id="toast-container" aria-live="polite"></div>
+
+    <div class="fixed bottom-5 right-5 z-40 cursor-default select-none">
+        <img src="/img/rf.png" alt="Designed by Riccardo Fava" class="h-8 w-auto drop-shadow-lg">
+    </div>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

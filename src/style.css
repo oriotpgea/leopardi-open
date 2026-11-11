@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+
+/* Componenti: stanno in questo layer così le classi di utilità di Tailwind
+   (es. mb-0, bg-blue-600) possono sovrascriverli */
+@layer components {
+    .card {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn { 
+        background: #ff6b00; color: white; font-weight: bold; 
+        border-radius: 8px; padding: 10px 16px; transition: 0.2s; 
+        border: none; cursor: pointer;
+    }
+    .btn:hover { background: #ea580c; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+    a.btn { text-align: center; text-decoration: none; }
+    .btn.btn-danger { background: #dc2626; }
+    .btn.btn-danger:hover { background: #ef4444; }
+
+    .nav-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .nav-btn:hover { background-color: rgba(255,255,255,0.1); }
+    .nav-btn.nav-active { color: #ff6b00; background-color: rgba(255,107,0,0.12); }
+
+    .input { 
+        background: #0f172a; border: 1px solid #334155; 
+        padding: 10px; border-radius: 8px; width: 100%; color: white; margin-bottom: 10px; 
+        /* FIX: 16px previene lo zoom automatico su iOS */
+        font-size: 16px; 
+    }
+    .input:focus { outline: 2px solid #ff6b00; border-color: transparent; }
+}
+
+.cup-red {
+    background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b);
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+}
+
+.hide { display: none !important; }
+
+/* NUOVO: Stile per la striscia scorrevole */
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background-color: #1e293b; /* darksec */
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+    position: relative;
+}
+
+.ticker-content {
+    display: inline-block;
+    padding-left: 100%; /* Inizia fuori schermo a destra */
+    animation: ticker 50s linear infinite;
+}
+
+.ticker-item {
+    display: inline-block;
+    padding: 0 20px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #94a3b8; /* gray-400 */
+}
+
+.ticker-item .score {
+    color: #ff6b00; /* bp orange */
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.ticker-item .rank {
+    color: #ffffff;
+    margin-right: 5px;
+    font-style: italic;
+}
+
+.ticker-item.ticker-label {
+    color: #ff6b00;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 1px;
+    margin: 0 30px;
+}
+.ticker-item.ticker-label-wide { margin: 0 50px; letter-spacing: 2px; }
+
+@keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* Se passi col mouse (su desktop) si ferma per leggere */
+.ticker-content:hover {
+    animation-play-state: paused;
+}
+
+/* Messaggi a scomparsa (al posto degli alert) */
+#toast-container {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    width: calc(100% - 32px);
+    max-width: 420px;
+    pointer-events: none;
+}
+.toast {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-left: 4px solid #22c55e;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: toast-in 0.25s ease-out;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.toast.toast-error { border-left-color: #ef4444; }
+.toast.toast-out { opacity: 0; transform: translateY(8px); }
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
