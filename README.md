@@ -52,7 +52,7 @@ Poi, da terminale: `npm run deploy:rules` e `npm run deploy:functions`.
 - `src/js/media.js` — foto, video e audio
 - `src/js/effects.js` — animazioni GOAL e fine partita
 - `public/` — file copiati così come sono (immagini, icone, manifest, service worker)
-- `functions/` — Cloud Function `optimizeVideo` (ffmpeg: max 6 secondi, 480px, MP4)
+- `functions/` — Cloud Function `optimizeVideo` (ffmpeg: max 6 secondi, 480px, MP4 con audio mono)
 - `firestore.rules`, `storage.rules`, `firebase.json` — regole di sicurezza
 
 ## Note sui dati
@@ -62,6 +62,7 @@ Poi, da terminale: `npm run deploy:rules` e `npm run deploy:functions`.
 - Il campo `tol` dei giocatori è la statistica mostrata come "Res".
 - Eliminando un giocatore si cancellano anche foto, video e audio; i team in cui ha giocato restano, così i suoi punti restano nelle classifiche.
 - Sostituendo foto, video o audio, il file vecchio viene cancellato.
+- Esultanza: se il giocatore ha un motto audio si sente quello, altrimenti l'audio del video.
 - Eliminando un team si cancellano anche le sue partite; eliminando un'edizione, tutti i suoi team e partite.
 - Il pulsante **🧹 Pulizia dati orfani** (Admin → Database) trova e cancella, dopo conferma, file che nessun giocatore usa e team/partite di edizioni eliminate.
 - La regione della Cloud Function (`us-west1`, la stessa dello Storage) è scritta in `functions/index.js` e in `src/js/firebase.js`: devono coincidere.

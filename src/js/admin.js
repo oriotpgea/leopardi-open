@@ -158,8 +158,8 @@ export function cancelEdit() {
 
     ['player-name', 'player-nick', 'player-desc', 'player-photo', 'player-video', 'player-audio'].forEach(f => $(f).value = '');
     $('photo-hint').innerText = 'Foto del giocatore (opzionale)';
-    $('video-hint').innerText = 'Viene tagliato a 6 secondi e compresso automaticamente.';
-    $('audio-hint').innerText = 'Frase o urlo breve (2-3s), max 5MB.';
+    $('video-hint').innerText = 'Tagliato a 6 secondi e compresso. Il suo audio si usa se non carichi un motto audio.';
+    $('audio-hint').innerText = "Frase o urlo breve (2-3s), max 5MB. Ha la precedenza sull'audio del video.";
     $('stat-prec').value = 70;
     $('stat-pow').value = 70;
     $('stat-tol').value = 70;

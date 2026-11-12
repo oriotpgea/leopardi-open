@@ -22,12 +22,23 @@ export function triggerGoalAnimation(playerId, teamId) {
     const photoUrl = safeUrl(player?.photoUrl);
     const audioUrl = safeUrl(player?.celebrationAudioUrl);
 
+    // L'audio caricato a parte ha la precedenza; altrimenti si sente quello del video
+    const useVideoSound = !!videoUrl && !audioUrl;
+
+    clearTimeout(goalTimer);
+    audioEl.pause();
+
     if (videoUrl) {
         imgEl.classList.add('hide');
         videoEl.classList.remove('hide');
+        videoEl.loop = !useVideoSound; // con l'audio del video, una sola volta (niente urlo ripetuto)
+        videoEl.muted = !useVideoSound;
         videoEl.src = videoUrl;
-        videoEl.muted = true;
-        videoEl.play().catch(() => {});
+        videoEl.play().catch(() => {
+            // I browser bloccano l'audio se l'utente non ha mai toccato la pagina: almeno il video, muto
+            videoEl.muted = true;
+            videoEl.play().catch(() => {});
+        });
     } else {
         videoEl.classList.add('hide');
         videoEl.pause();
@@ -37,20 +48,30 @@ export function triggerGoalAnimation(playerId, teamId) {
 
     if (audioUrl) {
         audioEl.src = audioUrl;
-        audioEl.play().catch(() => {}); // i browser bloccano l'audio se l'utente non ha mai toccato la pagina
-    } else {
-        audioEl.pause();
+        audioEl.play().catch(() => {}); // bloccato se l'utente non ha mai toccato la pagina
     }
 
     overlay.classList.remove('hide');
 
-    // Se arriva un altro goal prima della chiusura, il timer riparte da capo
-    clearTimeout(goalTimer);
-    goalTimer = setTimeout(() => {
+    // L'overlay resta 4 secondi; se si sente l'audio del video, resta finché il video finisce (max ~6s).
+    // Se arriva un altro goal prima della chiusura, il timer riparte da capo.
+    const close = () => {
         overlay.classList.add('hide');
         videoEl.pause();
         audioEl.pause();
-    }, 4000);
+    };
+    goalTimer = setTimeout(close, 4000);
+    if (useVideoSound) {
+        videoEl.onloadedmetadata = () => {
+            const ms = Math.min(7000, Math.max(4000, videoEl.duration * 1000 + 300));
+            if (Number.isFinite(ms)) {
+                clearTimeout(goalTimer);
+                goalTimer = setTimeout(close, ms);
+            }
+        };
+    } else {
+        videoEl.onloadedmetadata = null;
+    }
 }
 
 export function triggerEndMatch(match) {
